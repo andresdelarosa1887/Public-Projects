@@ -1,0 +1,137 @@
+libname logit "/folders/myshortcuts/DGCP_SAS_R/DOCUMENTO_AGOSTO/LOGIT_MODEL/MODELING_LOGITS/LOGIT_2018"; 
+libname compras "/folders/myfolders/DGCP/BASE_COMPRAS/DATA/ORIGIN";
+libname rpe "/folders/myfolders/DGCP/CIERRES/DATOS/RPE";
+
+*QUE UN PROVEEDOR SEA ADJUDICADO CON MAS DE 5,114,120 PESOS, QUE REPRESENTA EL PERCENTIL 90;
+*SIMULANDO DANDO LOS ANOS DISTINTOS DE ADJUDICACION;
+*PREDICCIONES DE LA CLASIFICACION EMPRESARIAL, ASUMIENDO QUE TODOS LOS PROVEEDORES PERTENECEN A LA
+MACRO REGION SURESTE Y SON DE PROPIETARIO MASCULINO;
+data clasificacionUP_3373; 
+infile datalines dlm=",";
+length GENERO $14 clasificacion_empresarial_3 $100 MACROREGION  $100; 
+input  Genero clasificacion_empresarial_3	ANOS_REGISTRADA	MACROREGION
+	  EsBienes EsServicios
+	ADJANO_2017	DISTANOS_ADJ;;
+datalines;
+Masculino,MIPYMES Certificadas por el MIC,2,SURESTE,0,1,0,1
+Masculino,MIPYMES Certificadas por el MIC,3,SURESTE,0,1,0,2
+Masculino,MIPYMES Certificadas por el MIC,4,SURESTE,0,1,0,3
+Masculino,MIPYMES Certificadas por el MIC,5,SURESTE,0,1,0,4
+Masculino,MIPYMES Certificadas por el MIC,6,SURESTE,0,1,0,5
+Masculino,MIPYMES Certificadas por el MIC,7,SURESTE,0,1,0,6
+Masculino,MIPYMES Certificadas por el MIC,8,SURESTE,0,1,0,7
+Masculino,MIPYMES Certificadas por el MIC,9,SURESTE,0,1,0,8
+Masculino,MIPYMES Certificadas por el MIC,2,SURESTE,0,1,0,1
+Masculino,MIPYMES Certificadas por el MIC,3,SURESTE,0,1,0,2
+Masculino,MIPYMES Certificadas por el MIC,4,SURESTE,0,1,0,3
+Masculino,MIPYMES Certificadas por el MIC,5,SURESTE,0,1,0,4
+Masculino,MIPYMES Certificadas por el MIC,6,SURESTE,0,1,0,5
+Masculino,MIPYMES Certificadas por el MIC,7,SURESTE,0,1,0,6
+Masculino,MIPYMES Certificadas por el MIC,8,SURESTE,0,1,0,7
+Masculino,MIPYMES Certificadas por el MIC,9,SURESTE,0,1,0,8
+Masculino,Gran empresa,2,SURESTE,0,1,0,1
+Masculino,Gran empresa,3,SURESTE,0,1,0,2
+Masculino,Gran empresa,4,SURESTE,0,1,0,3
+Masculino,Gran empresa,5,SURESTE,0,1,0,4
+Masculino,Gran empresa,6,SURESTE,0,1,0,5
+Masculino,Gran empresa,7,SURESTE,0,1,0,6
+Masculino,Gran empresa,8,SURESTE,0,1,0,7
+Masculino,Gran empresa,9,SURESTE,0,1,0,8
+Masculino,Gran empresa,2,SURESTE,0,1,0,1
+Masculino,Gran empresa,3,SURESTE,0,1,0,2
+Masculino,Gran empresa,4,SURESTE,0,1,0,3
+Masculino,Gran empresa,5,SURESTE,0,1,0,4
+Masculino,Gran empresa,6,SURESTE,0,1,0,5
+Masculino,Gran empresa,7,SURESTE,0,1,0,6
+Masculino,Gran empresa,8,SURESTE,0,1,0,7
+Masculino,Gran empresa,9,SURESTE,0,1,0,8
+Masculino,Persona Física,2,SURESTE,0,1,0,1
+Masculino,Persona Física,3,SURESTE,0,1,0,2
+Masculino,Persona Física,4,SURESTE,0,1,0,3
+Masculino,Persona Física,5,SURESTE,0,1,0,4
+Masculino,Persona Física,6,SURESTE,0,1,0,5
+Masculino,Persona Física,7,SURESTE,0,1,0,6
+Masculino,Persona Física,8,SURESTE,0,1,0,7
+Masculino,Persona Física,9,SURESTE,0,1,0,8
+Masculino,Persona Física,2,SURESTE,0,1,0,1
+Masculino,Persona Física,3,SURESTE,0,1,0,2
+Masculino,Persona Física,4,SURESTE,0,1,0,3
+Masculino,Persona Física,5,SURESTE,0,1,0,4
+Masculino,Persona Física,6,SURESTE,0,1,0,5
+Masculino,Persona Física,7,SURESTE,0,1,0,6
+Masculino,Persona Física,8,SURESTE,0,1,0,7
+Masculino,Persona Física,9,SURESTE,0,1,0,8
+; 
+run;
+
+proc plm restore=logit_2018; 
+	score data=clasificacionUP_3373 out=simclasificacionUP_3373/ ilink;
+	title "Predictions using PROC PLM";
+run;
+
+data simula.e_clasificacionUP_adj;
+set simclasificacionUP_3373;
+run; 
+
+
+title "Evolución de la Probabilidad de Adjudicación"; 
+TITLE2 "Por Clasificación Empresarial";
+TITLE3 "dado Años distintos adjudicación";
+proc sgplot data=simclasificacionUP_3373; 
+	vline DISTANOS_ADJ / response=predicted stat=mean group=clasificacion_empresarial_3 datalabel markers;
+	format predicted percent8.2;
+	xaxis label="Años de Adjudicación";
+	yaxis label="Predicción de la Probabilidad de éxito";
+	footnote1 "Estimando la probabilidad de éxito de adjudicación";
+	footnote2 "Utilizando datos del Portal Transaccional a Junio 2018"; 
+run; 
+
+
+*PREDICCIONES DE GENERO ASUMIENDO A UNA MIPYME CERTIFICADA POR EL MIC;
+data  generoup_3373; 
+infile datalines dlm=",";
+length GENERO $14 clasificacion_empresarial_3 $100 MACROREGION  $100; 
+input  Genero clasificacion_empresarial_3	ANOS_REGISTRADA	MACROREGION
+	  EsBienes EsServicios
+	ADJANO_2017	DISTANOS_ADJ;;
+datalines;
+Masculino,MIPYMES Certificadas por el MIC,2,SURESTE,0,1,0,1
+Masculino,MIPYMES Certificadas por el MIC,3,SURESTE,0,1,0,2
+Masculino,MIPYMES Certificadas por el MIC,4,SURESTE,0,1,0,3
+Masculino,MIPYMES Certificadas por el MIC,5,SURESTE,0,1,0,4
+Masculino,MIPYMES Certificadas por el MIC,6,SURESTE,0,1,0,5
+Masculino,MIPYMES Certificadas por el MIC,7,SURESTE,0,1,0,6
+Masculino,MIPYMES Certificadas por el MIC,8,SURESTE,0,1,0,7
+Masculino,MIPYMES Certificadas por el MIC,9,SURESTE,0,1,0,8
+Femenino,MIPYMES Certificadas por el MIC,2,SURESTE,0,1,0,1
+Femenino,MIPYMES Certificadas por el MIC,3,SURESTE,0,1,0,2
+Femenino,MIPYMES Certificadas por el MIC,4,SURESTE,0,1,0,3
+Femenino,MIPYMES Certificadas por el MIC,5,SURESTE,0,1,0,4
+Femenino,MIPYMES Certificadas por el MIC,6,SURESTE,0,1,0,5
+Femenino,MIPYMES Certificadas por el MIC,7,SURESTE,0,1,0,6
+Femenino,MIPYMES Certificadas por el MIC,8,SURESTE,0,1,0,7
+Femenino,MIPYMES Certificadas por el MIC,9,SURESTE,0,1,0,8
+; 
+run;
+
+proc plm restore=logit_2018; 
+	score data=generoUP_3373 out=simgeneroUP_3373/ ilink;
+	title "Predictions using PROC PLM";
+run;
+
+data simula.f_simgeneroUP_adj;
+set simgeneroUP_3373;
+run; 
+
+title "Evolución de la Probabilidad de Adjudicación de una MIPYME Certificada de servicios"; 
+TITLE2 "Por Género";
+TITLE3 "Dado años distintos adjudicación";
+proc sgplot data=simgeneroUP_3373; 
+	vline DISTANOS_ADJ / response=predicted stat=mean group=genero datalabel markers;
+	format predicted percent8.2;
+	xaxis label="Años de Adjudicación";
+	yaxis label="Predicción de la Probabilidad de éxito";
+	footnote1 "Estimando la probabilidad de éxito de adjudicación";
+	footnote2 "Utilizando datos del Portal Transaccional a Junio 2018"; 
+run; 
+
