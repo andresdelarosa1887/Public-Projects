@@ -1,12 +1,12 @@
-libname logit "/folders/myshortcuts/3_ESTUDIOS/MODELACIONES/01_clasificacion_proveedores/05_modelo_SAS_anterior/MODELING_LOGITS/1_LOGIT_2018/DATOS"; 
 
+libname logit "/folders/myshortcuts/Public-Projects/Predicting-StateProviders/1_LOGIT_2018/DATOS";
 
 *SOLAMENTE UTILIZAR LOS DATOS DEL PORTAL TRANSACCIONAL PARA INCLUIR OTRAS VARIABLES DE INTERES
 COMO LA CANTIDAD DE VECES QUE PARTICIPO UN PROVEEDOR EN UN PROCESO DE COMPRA;
 *ES NECESARIO UTILIZAR LOS DATOS QUE FUERON UTILIZADOS PARA CREAR LA BASE DE DATOS
 CONSOLIDADA, PERO ESTA BASE DE RPE NO TIENE ALGUNAS CLASIFICACIONES, A MENOS QUE SE CRUZEN;
 
-*SACANDO LAS ADJUDICACIONES DEL 2018; 
+*SACANDO LAS ADJUDICACIONES DEL 2018, Buscando la información de las bases de datos; 
 /*
 proc sql; 
 create table rpedistintos_2018 as 
@@ -15,7 +15,7 @@ from compras.historicos_break
 where ano_aprobacion=2018 and ORIGEN="PT" 
 group by rpe
 order by rpe; 
-*/ 
+
 
 proc sql; 
 create table rpedistintos_2018 as 
@@ -50,6 +50,8 @@ REGION EsMiPyme RubroPrincipal Municipio FechaUltimaModificacion MesUltimaModifi
 rename ANO=ANO_REGISTRO;
 where estatus="Activo";
 run; 
+
+*/ 
 
 
 data logit.logit_2;
@@ -137,7 +139,7 @@ proc logistic data=logit.logit_337 PLOTS(MAXPOINTS=NONE)
     class genero (param=reference ref='Masculino') 
           clasificacion_empresarial_3 (param=reference ref="MIPYMES no certificadas y otras organizaciones")
           MACROREGION (param=reference ref="SURESTE"); 
-    model ADJUDICADO_2018(event='1')= Genero clasificacion_empresarial_3    ANOS_REGISTRADA MACROREGION
+    model ADJUDICADO_2018(event='1')= Genero clasificacion_empresarial_3   ANOS_REGISTRADA MACROREGION
       EsBienes EsServicios
     ADJANO_2017 DISTANOS_ADJ;
     TITLE1 "QUE CARACTERISTICAS DE LOS PROVEEDORS INFLUYERON A QUE ESTOS FUERAN ADJUDICADOS"; 
