@@ -1,0 +1,21 @@
+
+
+ababbcabaabcac
+10100210110212
+12345678901234
+
+a = 6/14
+B= 5/14
+c = 3/14
+
+P(A|A)= 1/6
+P(A|B)= 2/5
+P(A|C)= 2/3
+P(B|A)= 4/6
+P(B|C)= 0/3
+P(C|A)= 0/6
+P(C|B)= 2/3
+
+what probability will be assigned to the following test sequence?
+AABCBAB
+(1/6)*(4/6)*(2/3)*(0/3)*(2/5)*(4/6) 
