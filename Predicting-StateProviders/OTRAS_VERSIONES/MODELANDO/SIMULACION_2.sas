@@ -1,6 +1,6 @@
-libname rpe "/folders/myfolders/DGCP/BASE_RPE/DATA/A_MAYO_2018"; 
+libname rpe "/folders/myshortcuts/Public-Projects/Predicting-StateProviders/OTRAS_VERSIONES/DATOS"; 
 libname compras "/folders/myfolders/DGCP/BASE_COMPRAS/DATA/ORIGIN";
-libname rpe_l "/folders/myfolders/DGCP/BASE_RPE/DATA/A_MAYO_2018/MODELING_LOGITS";
+libname rpe_l "/folders/myshortcuts/Public-Projects/Predicting-StateProviders/OTRAS_VERSIONES/DATOS";
 
 *MODIFICANDO LOS ANOS ADJUDICADOS PARA EL 2016- REGISTRO DE PROVEDOR AL 2016;
 data rpe.logit_3372; 
@@ -11,11 +11,7 @@ drop ADJUDICADO_2017;
 where ano_registro<2017; 
 drop ano_registro DISTANOS_ADJ ANOS_REGISTRADA;
 RUN; 
-proc print data=rpe_l.logit_3372 (obs=8);  
-run; 
-proc freq data=rpe_l.logit_3372; 
-tables clasificacion_rpe*esfabricante; 
-run; 
+
 
 *
 Esfabricante

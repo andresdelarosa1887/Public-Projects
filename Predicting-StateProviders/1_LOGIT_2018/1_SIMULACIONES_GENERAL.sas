@@ -1,7 +1,5 @@
-libname logit "/folders/myshortcuts/DGCP_SAS_R/DOCUMENTO_AGOSTO/LOGIT_MODEL/MODELING_LOGITS/1_LOGIT_2018/DATOS"; 
-libname compras "/folders/myfolders/DGCP/BASE_COMPRAS/DATA/ORIGIN";
-libname rpe "/folders/myfolders/DGCP/CIERRES/DATOS/RPE";
-libname simula "/folders/myshortcuts/DGCP_SAS_R/DOCUMENTO_AGOSTO/DATOS/DATOS_GRAFICOS/EN_ORDEN/SIMULACIONES_LOGIT";
+libname logit "/folders/myshortcuts/Public-Projects/Predicting-StateProviders/1_LOGIT_2018/DATOS";
+libname simula "/folders/myshortcuts/Public-Projects/Predicting-StateProviders/1_LOGIT_2018/DATOS/SIMULA";
 
 *SIMULANDO DANDO LOS ANOS DISTINTOS DE ADJUDICACION;
 *PREDICCIONES DE LA CLASIFICACION EMPRESARIAL, ASUMIENDO QUE TODOS LOS PROVEEDORES PERTENECEN A LA
@@ -242,6 +240,7 @@ proc sgplot data=simgenero_reg_3373;
 	footnote2 "Utilizando datos del Portal Transaccional a Junio 2018"; 
 run; 
 
+/*
 proc sql; 
 CREATE TABLE SOLICITUD_FOMENTO AS
 select cod_unidad_compra,unidad_compra, sum(valor_total) as TOTAL_ADJUDICADO format=dollar32., 
@@ -255,5 +254,5 @@ order by calculated TOTAL_ADJUDICADO DESC;
 proc print data=solicitud_fomento; 
 sum TOTAL_ADJUDICADO CANTIDAD_CONTRATOS; 
 run; 
-
+*/
 

@@ -2,6 +2,8 @@ libname rpe "/folders/myfolders/DGCP/BASE_RPE/DATA/A_MAYO_2018";
 libname compras "/folders/myfolders/DGCP/BASE_COMPRAS/DATA";
 libname rpe_l "/folders/myfolders/DGCP/BASE_RPE/DATA/A_MAYO_2018/MODELING_LOGITS";
 libname graficos "/folders/myfolders/DGCP/DOCUMENTO_AGOSTO/DATOS/DATOS_GRAFICOS/SIMULACIONES_LOGIT";
+
+
 data predictions_3373; 
 infile datalines dlm=",";
 length GENERO $14 CLASIFICACION_RPE $16; 

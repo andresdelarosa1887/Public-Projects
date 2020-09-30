@@ -1,23 +1,16 @@
-libname rpe "/folders/myshortcuts/DGCP_SAS_R/DOCUMENTO_AGOSTO/LOGIT_MODEL/MODELING_LOGITS"; 
-libname compras "/folders/myfolders/DGCP/BASE_COMPRAS/DATA/ORIGIN";
-libname rpe_l "/folders/myfolders/DGCP/BASE_RPE/DATA/A_MAYO_2018/MODELING_LOGITS";
+libname rpe "/folders/myshortcuts/Public-Projects/Predicting-StateProviders/1_LOGIT_2018/DATOS"; 
+*libname rpe_l "/folders/myfolders/DGCP/BASE_RPE/DATA/A_MAYO_2018/MODELING_LOGITS";
 
-*MODIFICANDO LOS ANOS ADJUDICADOS PARA EL 2016- REGISTRO DE PROVEDOR AL 2016;
+*MODIFICANDO LOS ANOS ADJUDICADOS PARA EL 2018- REGISTRO DE PROVEDOR AL 2018;
+proc print data=rpe.logit_337 (obs=11); run;
+
 data rpe.logit_3372; 
 set rpe.logit_337; 
 IF DISTANOS_ADJ>0 THEN DISTANOS_ADJ2=DISTANOS_ADJ-1; ELSE DISTANOS_ADJ2=0;
-IF ANOS_REGISTRADA>0 then ANOS_REGISTRADA2= ANOS_REGISTRADA-1; ELSE ANOS_REGISTRADA2=1;
-drop ADJUDICADO_2017; 
-where ano_registro<2017; 
-drop ano_registro DISTANOS_ADJ ANOS_REGISTRADA;
+IF ANOS_REGISTRADA>0 then ANOS_REGISTRADA2= ANOS_REGISTRADA-1; ELSE ANOS_REGISTRADA2=1; 
+where ANO_REGISTRO<2017; 
+drop ANO_REGISTRO DISTANOS_ADJ ANOS_REGISTRADA;
 RUN; 
-
-
-proc print data=rpe_l.logit_3372 (obs=8);  
-run; 
-proc freq data=rpe_l.logit_3372; 
-tables clasificacion_rpe*esfabricante; 
-run; 
 
 *
 Esfabricante
@@ -32,19 +25,19 @@ ADJANO_2016;
 *ADJUDICACIONES DEL ANO 2016 COMO VARIABLE DEPENDIENTE;
 *ods select none; 
 ods select all; 
-proc logistic data=rpe_l.logit_3372 PLOTS(MAXPOINTS=NONE)
+proc logistic data=rpe.logit_3372 PLOTS(MAXPOINTS=NONE)
 	plots(only)=(effect oddsratio);
 	class genero (param=reference ref='Masculino') 
-		  CLASIFICACION_RPE (param=reference ref="No clasificada"); 
-	model  ADJANO_2016(event='1')= Genero CLASIFICACION_RPE ANOS_REGISTRADA2	ESDISTRITO 
+		  ClasificacionRPE_m (param=reference ref="No clasificada"); 
+	model  ADJUDICADO_2018	(event='1')= Genero ClasificacionRPE_m ANOS_REGISTRADA2	ESDISTRITO 
 	Esfabricante	EsDistribuidor	EsImportador	EsContratista	EsBienes	EsConsultoria	EsServicios
 		CERT_MIC	DISTANOS_ADJ2/ clodds=pl selection=backward slentry=0.10 slstay=0.15; 
 	TITLE1 "QUE CARACTERISTICAS DE LOS PROVEEDORS INFLUYERON A QUE ESTOS FUERAN ADJUDICADOS"; 
-	store out=logit_2016; 
+	store out=logit_2018; 
 run; 
 
 proc freq data=rpe.logit_3372;
-tables clasificacion_rpe; 
+tables clasificacion_empresarial_3; 
 run; 
 
 *CREAR UNA SIMULACION DE UNA MIPYME; 
